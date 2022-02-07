@@ -1,0 +1,11 @@
+@import "antd/dist/antd.css";
+
+.part-type-chip {
+  margin-left: 12px;
+  padding: 2px 4px;
+  background-color: silver;
+  font-size: calc(1em - 4px);
+  vertical-align: bottom;
+  color: #fff;
+  border-radius: 2px;
+}
