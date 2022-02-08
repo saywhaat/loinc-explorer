@@ -25,6 +25,7 @@ export type PartGroups = {
   systems: Parts;
   scales: Parts;
   methods: Parts;
+  classes: Parts;
 };
 
 export type TermNode = {

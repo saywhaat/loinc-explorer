@@ -17,7 +17,7 @@ export default function App({ terms, hierarchy, partGroups }: AppProps) {
       value=""
       onChange={() => {}}
       hierarchy={hierarchy}
-      components={partGroups.components}
+      partGroups={partGroups}
     />
   );
 }

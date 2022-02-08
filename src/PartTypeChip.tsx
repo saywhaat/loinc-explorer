@@ -7,7 +7,7 @@ const LEAF_TYPE_COLORS: any = {
 };
 
 type LeafTypeChipProps = {
-  type: "component" | "class" | "system";
+  type: string;
 };
 
 export default function PartTypeChip({ type }: LeafTypeChipProps) {

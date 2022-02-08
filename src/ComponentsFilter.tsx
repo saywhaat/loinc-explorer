@@ -1,17 +1,19 @@
 import React from "react";
 import { Card, Tree, Drawer, Input, Typography } from "antd";
-import { Hierarchy, Parts, TreeNode } from "./types";
+import { Hierarchy, Parts, PartNode, PartGroups } from "./types";
 import { filterHierarchy } from "./hierarchy";
 import { createTree } from "./tree";
 import AutoSizer from "react-virtualized-auto-sizer";
 import PartTypeChip from "./PartTypeChip";
 import Highlighter from "react-highlight-words";
+import { useWindowWidth } from "@react-hook/window-size";
+import PartsTree from "./PartsTree";
 
 type ComponentsTreeProps = {
   search: string;
   height: number;
   hierarchy: Hierarchy;
-  components: Parts;
+  components: PartNode[];
 };
 
 const ComponentsTree = ({
@@ -20,23 +22,38 @@ const ComponentsTree = ({
   search,
   height,
 }: ComponentsTreeProps) => {
-  let componentKeys = Object.keys(components);
-  if (search) {
-    componentKeys = componentKeys.filter((key) => {
-      const component = components[key];
+  const [autoExpandParent, setAutoExpandParent] = React.useState(true);
+  const [expandedKeys, setExpandedKeys] = React.useState<string[]>([]);
+
+  const filteredComponents = components.filter((component) => {
+    if (search) {
       return component.name.toLowerCase().includes(search.toLowerCase());
-    });
-  }
+    }
+    return true;
+  });
+  const filteredComponentCodes = filteredComponents.map((d) => d.code);
+
   const [filteredHierarchy, extraLeafs] = filterHierarchy(
     hierarchy,
-    componentKeys
+    filteredComponentCodes
   );
   const componentsTree = createTree(filteredHierarchy, () => ({}));
+  const onExpand = (newExpandedKeys: any[]) => {
+    setExpandedKeys(newExpandedKeys);
+    setAutoExpandParent(false);
+  };
+  React.useEffect(() => {
+    if (search) {
+      setExpandedKeys(filteredComponentCodes);
+      setAutoExpandParent(true);
+    }
+  }, [search]);
 
   return (
     <Tree
-      autoExpandParent
-      expandedKeys={search ? componentKeys : []}
+      autoExpandParent={autoExpandParent}
+      expandedKeys={expandedKeys}
+      onExpand={onExpand}
       treeData={componentsTree}
       selectable={false}
       height={height}
@@ -63,17 +80,28 @@ type Props = {
   value: string;
   onChange: () => void;
   hierarchy: Hierarchy;
-  components: Parts;
+  partGroups: PartGroups;
 };
 
 export default function ComponentsFilter({
   value,
   onChange,
   hierarchy,
-  components,
+  partGroups,
 }: Props) {
   const [visible, setVisible] = React.useState(false);
   const [search, setSearch] = React.useState("");
+  const windowWidth = useWindowWidth();
+
+  const filteredComponents = Object.values(partGroups.components).filter(
+    (component) => {
+      if (search) {
+        return component.name.toLowerCase().includes(search.toLowerCase());
+      }
+      return true;
+    }
+  );
+  const filteredComponentCodes = filteredComponents.map((d) => d.code);
 
   // const deferredSearch = React.useDeferredValue(search);
 
@@ -81,8 +109,9 @@ export default function ComponentsFilter({
     <>
       <Card onClick={() => setVisible(true)}>1234</Card>
       <Drawer
-        width={600}
+        width={windowWidth - 200}
         visible={visible}
+        closable={false}
         onClose={() => setVisible(false)}
         placement="left"
       >
@@ -92,10 +121,12 @@ export default function ComponentsFilter({
         />
         <AutoSizer disableWidth>
           {({ height }) => (
-            <ComponentsTree
-              height={height}
+            <PartsTree
+              height={height - 8}
               hierarchy={hierarchy}
-              components={components}
+              filteredPartCodes={filteredComponentCodes}
+              parts={partGroups.components}
+              partGroups={partGroups}
               search={search}
             />
           )}

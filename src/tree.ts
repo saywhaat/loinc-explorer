@@ -2,7 +2,7 @@ import { Hierarchy, TreeNode } from "./types";
 
 export function createTree<T>(
   hierarchy: Hierarchy,
-  getProps: (code: string) => T
+  getProps: any = () => ({})
 ): TreeNode<T>[] {
   const result: TreeNode<T>[] = [];
   const entries: { [code: string]: number } = {};

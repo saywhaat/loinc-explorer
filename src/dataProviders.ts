@@ -35,6 +35,7 @@ export async function fetchParts(): Promise<PartGroups> {
     systems: {},
     scales: {},
     methods: {},
+    classes: {},
   };
   const partTypeNameMapping: {
     [key: string]: (partsGroups: PartGroups) => Parts;
@@ -48,6 +49,7 @@ export async function fetchParts(): Promise<PartGroups> {
     SUFFIX: (d) => d.suffixes,
     SYSTEM: (d) => d.systems,
     TIME: (d) => d.timeAspects,
+    CLASS: (d) => d.classes,
   };
   for (let i = 0; i < items.length; i++) {
     const { PartNumber, PartName, PartTypeName, Status } = items[i];
