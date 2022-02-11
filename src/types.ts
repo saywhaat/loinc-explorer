@@ -11,6 +11,7 @@ export type PartNode = {
   code: string;
   status: string;
   name: string;
+  displayName: string;
 };
 
 export type Parts = { [code: string]: PartNode };

@@ -59,7 +59,13 @@ export async function fetchParts(): Promise<PartGroups> {
       header: true,
       worker: true,
       step({ data }) {
-        const { PartNumber, PartDisplayName, PartTypeName, Status } = data;
+        const {
+          PartNumber,
+          PartName,
+          PartDisplayName,
+          PartTypeName,
+          Status,
+        } = data;
         const getParts = partTypeNameMapping[PartTypeName];
         if (getParts) {
           const parts = getParts(result);
@@ -67,7 +73,8 @@ export async function fetchParts(): Promise<PartGroups> {
             parts[PartNumber] = {
               code: PartNumber,
               status: Status,
-              name: PartDisplayName,
+              name: PartName,
+              displayName: PartDisplayName,
             };
           } else {
             console.log("0-0001", PartTypeName, PartNumber);

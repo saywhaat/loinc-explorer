@@ -93,10 +93,10 @@ export default function PartsTree({
         let title = "!!!!!!!";
         if (partGroups.classes[node.key]) {
           partType = "class";
-          title = partGroups.classes[node.key].name;
+          title = partGroups.classes[node.key].displayName;
         } else if (partGroups.components[node.key]) {
           partType = "component";
-          title = partGroups.components[node.key].name;
+          title = partGroups.components[node.key].displayName;
         }
         return (
           <>
