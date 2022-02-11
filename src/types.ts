@@ -1,7 +1,7 @@
 export type HierarchyNode = {
   code: string;
   parentCode: string;
-  text: string;
+  // text: string;
   path: string;
 };
 

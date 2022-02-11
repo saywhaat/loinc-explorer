@@ -18,7 +18,7 @@ function createFilteredTree(
   filteredHierarchy.UNCATEGORIZED = {
     code: "UNCATEGORIZED",
     parentCode: "",
-    text: "UNCATEGORIZED",
+    // text: "UNCATEGORIZED",
     path: "",
   };
   for (let i = 0; i < extraLeafs.length; i++) {
@@ -26,7 +26,7 @@ function createFilteredTree(
     filteredHierarchy[leaf] = {
       code: leaf,
       parentCode: "UNCATEGORIZED",
-      text: parts[leaf].name,
+      // text: parts[leaf].name,
       path: "",
     };
   }
@@ -41,6 +41,8 @@ type Props = {
   filteredPartCodes: string[];
   parts: Parts;
   partGroups: PartGroups;
+  selectedPart: string | null;
+  onSelectPart: (part: string | null) => void;
 };
 
 export default function PartsTree({
@@ -50,6 +52,8 @@ export default function PartsTree({
   parts,
   height,
   partGroups,
+  selectedPart,
+  onSelectPart,
 }: Props) {
   const [autoExpandParent, setAutoExpandParent] = React.useState(true);
   const [expandedKeys, setExpandedKeys] = React.useState<string[]>([]);
@@ -75,18 +79,24 @@ export default function PartsTree({
 
   return (
     <Tree
+      selectedKeys={selectedPart ? [selectedPart] : []}
+      onSelect={([selectedKey]) =>
+        onSelectPart(selectedKey ? selectedKey.toString() : null)
+      }
       autoExpandParent={autoExpandParent}
       expandedKeys={expandedKeys}
       onExpand={onExpand}
       treeData={tree}
-      selectable={false}
       height={height}
       titleRender={(node) => {
         let partType = null;
+        let title = "!!!!!!!";
         if (partGroups.classes[node.key]) {
           partType = "class";
+          title = partGroups.classes[node.key].name;
         } else if (partGroups.components[node.key]) {
           partType = "component";
+          title = partGroups.components[node.key].name;
         }
         return (
           <>
@@ -96,7 +106,7 @@ export default function PartsTree({
               )}
               searchWords={[search]}
               autoEscape={true}
-              textToHighlight={node.title}
+              textToHighlight={title}
             />
             {partType ? <PartTypeChip type={partType} /> : null}
           </>

@@ -155,8 +155,12 @@ const Qq = ({ terms, hierarchy, parts }: AppProps) => {
 
   const container = document.getElementById("root");
   if (!container) return;
-  const root = ReactDOM.createRoot(container);
-  root.render(
-    <App terms={terms} hierarchy={hierarchy} partGroups={partGroups} />
+  // const root = ReactDOM.createRoot(container);
+  // root.render(
+  //   <App terms={terms} hierarchy={hierarchy} partGroups={partGroups} />
+  // );
+  ReactDOM.render(
+    <App terms={terms} hierarchy={hierarchy} partGroups={partGroups} />,
+    container
   );
 })();

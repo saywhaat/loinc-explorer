@@ -15,7 +15,7 @@ export function createTree<T>(
       key: code,
       parentCode: hierarchy[code].parentCode,
       children: [],
-      title: hierarchy[code].text,
+      // title: hierarchy[code].text,
       ...props,
     };
     i++;

@@ -1,9 +1,9 @@
 import React from "react";
 import { Hierarchy, PartGroups, TreeNode, Terms } from "./types";
 import { filterHierarchy } from "./hierarchy";
-import { Layout, Menu, Drawer, Select } from "antd";
+import { Layout, Menu, Drawer, Row, Col } from "antd";
 import { createTree } from "./tree";
-import ComponentsFilter from "./ComponentsFilter";
+import ComponentList from "./ComponentList";
 
 type AppProps = {
   terms: Terms;
@@ -12,22 +12,17 @@ type AppProps = {
 };
 
 export default function App({ terms, hierarchy, partGroups }: AppProps) {
+  const [selectedPartType, setSelectedPartType] = React.useState<string | null>(
+    null
+  );
   const [selectedPart, setSelectedPart] = React.useState<string | null>(null);
-  /*
-   <ComponentsFilter
-      value=""
-      onChange={() => {}}
-      hierarchy={hierarchy}
-      partGroups={partGroups}
-    />
-  */
 
   return (
     <Layout style={{ height: "100vh" }}>
       <Layout.Sider>
         <Menu
-          selectedKeys={selectedPart ? [selectedPart] : []}
-          onSelect={({ key }) => setSelectedPart(key)}
+          selectedKeys={selectedPartType ? [selectedPartType] : []}
+          onSelect={({ key }) => setSelectedPartType(key)}
         >
           <Menu.Item key="components">Components</Menu.Item>
           <Menu.Item key="classes">Classes</Menu.Item>
@@ -42,13 +37,19 @@ export default function App({ terms, hierarchy, partGroups }: AppProps) {
           visible
           getContainer={false}
           style={{ position: "absolute" }}
+          bodyStyle={{ display: "flex" }}
         >
-          <ComponentsFilter
-            value=""
-            onChange={() => {}}
-            hierarchy={hierarchy}
-            partGroups={partGroups}
-          />
+          <Row>
+            <Col>
+              <ComponentList
+                selectedPart={selectedPart}
+                onSelectPart={setSelectedPart}
+                hierarchy={hierarchy}
+                partGroups={partGroups}
+              />
+            </Col>
+            <Col>hw</Col>
+          </Row>
         </Drawer>
       </Layout.Content>
     </Layout>

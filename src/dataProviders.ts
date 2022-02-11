@@ -15,7 +15,7 @@ export async function fetchHierarchy(): Promise<Hierarchy> {
           result[CODE] = {
             code: CODE,
             parentCode: IMMEDIATE_PARENT,
-            text: CODE_TEXT,
+            // text: CODE_TEXT,
             path: PATH_TO_ROOT,
           };
         }
@@ -59,7 +59,7 @@ export async function fetchParts(): Promise<PartGroups> {
       header: true,
       worker: true,
       step({ data }) {
-        const { PartNumber, PartName, PartTypeName, Status } = data;
+        const { PartNumber, PartDisplayName, PartTypeName, Status } = data;
         const getParts = partTypeNameMapping[PartTypeName];
         if (getParts) {
           const parts = getParts(result);
@@ -67,13 +67,13 @@ export async function fetchParts(): Promise<PartGroups> {
             parts[PartNumber] = {
               code: PartNumber,
               status: Status,
-              name: PartName,
+              name: PartDisplayName,
             };
           } else {
-            //  console.log("0-0001", PartTypeName, PartNumber);
+            console.log("0-0001", PartTypeName, PartNumber);
           }
         } else {
-          //  console.log("0-0000", PartTypeName);
+          console.log("0-0000", PartTypeName);
         }
       },
       complete,
@@ -86,18 +86,18 @@ export async function fetchParts(): Promise<PartGroups> {
 export async function fetchTerms(): Promise<Terms> {
   const response = await axios.get("/data/LoincTableCore.csv");
   const result: Terms = {};
-  // await new Promise((complete) => {
-  //   parse<any>(response.data, {
-  //     header: true,
-  //     worker: true,
-  //     step({ data }) {
-  //       const { LOINC_NUM } = data;
-  //       result[LOINC_NUM] = {
-  //         code: LOINC_NUM,
-  //       };
-  //     },
-  //     complete,
-  //   });
-  // });
+  await new Promise((complete) => {
+    parse<any>(response.data, {
+      header: true,
+      worker: true,
+      step({ data }) {
+        const { LOINC_NUM } = data;
+        result[LOINC_NUM] = {
+          code: LOINC_NUM,
+        };
+      },
+      complete,
+    });
+  });
   return result;
 }
